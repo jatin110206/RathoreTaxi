@@ -1,4 +1,3 @@
-
 # Backend API Documentation
 
 ## Register User
@@ -93,7 +92,6 @@ curl -X POST http://localhost:3000/users/register \
     "password": "password123"
   }'
 ```
-
 
 ## Login User
 
@@ -191,9 +189,6 @@ curl -X POST http://localhost:3000/users/login \
   }'
 ```
 
-
-
-
 ## Logout User
 
 ### Endpoint
@@ -251,8 +246,6 @@ Returned when the token is missing, invalid, or already blacklisted.
 curl -X GET http://localhost:3000/users/logout \
   -H "Authorization: Bearer <authentication-token>"
 ```
-
-
 
 ## Captain Registration
 
@@ -369,4 +362,161 @@ curl -X POST http://localhost:3000/captain/register \
       "vehicleType": "car"
     }
   }'
+```
+
+## Captain Login
+
+### Endpoint
+
+`POST /captain/login`
+
+Authenticates a captain and returns a JWT token in the response and cookie.
+
+### Request Body
+
+```json
+{
+  "email": "captain@example.com",
+  "password": "password123"
+}
+```
+
+### Success Response
+
+#### `200 OK`
+
+```json
+{
+  "token": "authentication-token",
+  "captain": {
+    "_id": "captain-id",
+    "email": "captain@example.com"
+  }
+}
+```
+
+### Error Responses
+
+#### `400 Bad Request`
+
+Returned when the email or password fails validation.
+
+#### `401 Unauthorized`
+
+```json
+{
+  "message": "Captain not found"
+}
+```
+
+or
+
+```json
+{
+  "message": "Invalid password"
+}
+```
+
+### Example Request
+
+```bash
+curl -X POST http://localhost:3000/captain/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "captain@example.com",
+    "password": "password123"
+  }'
+```
+
+---
+
+## Captain Profile
+
+### Endpoint
+
+`GET /captain/profile`
+
+Returns the profile of the authenticated captain.
+
+### Authentication
+
+Use either the `token` cookie or:
+
+```http
+Authorization: Bearer <authentication-token>
+```
+
+### Success Response
+
+#### `200 OK`
+
+```json
+{
+  "captain": {
+    "_id": "captain-id",
+    "email": "captain@example.com"
+  }
+}
+```
+
+### Error Responses
+
+#### `401 Unauthorized`
+
+Returned when the token is missing, invalid, or blacklisted.
+
+### Example Request
+
+```bash
+curl -X GET http://localhost:3000/captain/profile \
+  -H "Authorization: Bearer <authentication-token>"
+```
+
+---
+
+## Captain Logout
+
+### Endpoint
+
+`GET /captain/logout`
+
+Logs out the authenticated captain, clears the authentication cookie, and blacklists the token.
+
+### Authentication
+
+Use either the `token` cookie or:
+
+```http
+Authorization: Bearer <authentication-token>
+```
+
+### Success Response
+
+#### `200 OK`
+
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+### Error Responses
+
+#### `400 Bad Request`
+
+```json
+{
+  "message": "No token provided"
+}
+```
+
+#### `401 Unauthorized`
+
+Returned when the token is invalid or blacklisted.
+
+### Example Request
+
+```bash
+curl -X GET http://localhost:3000/captain/logout \
+  -H "Authorization: Bearer <authentication-token>"
 ```
