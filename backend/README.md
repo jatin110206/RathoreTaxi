@@ -1,3 +1,4 @@
+
 # Backend API Documentation
 
 ## Register User
@@ -249,4 +250,123 @@ Returned when the token is missing, invalid, or already blacklisted.
 ```bash
 curl -X GET http://localhost:3000/users/logout \
   -H "Authorization: Bearer <authentication-token>"
+```
+
+
+
+## Captain Registration
+
+### Endpoint
+
+`POST /captain/register`
+
+Registers a new captain with personal and vehicle details, hashes the password, sets an authentication cookie, and returns a JWT token.
+
+### Request Headers
+
+```http
+Content-Type: application/json
+```
+
+### Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "Jatin",
+    "lastname": "Rathore"
+  },
+  "email": "jatin@example.com",
+  "password": "password123",
+  "vehicle": {
+    "color": "Black",
+    "plate": "RJ14AB1234",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Required Data
+
+| Field                   | Type   | Required | Description                   |
+| ----------------------- | ------ | -------: | ----------------------------- |
+| `fullname.firstname`  | String |      Yes | Captain's first name          |
+| `fullname.lastname`   | String |       No | Captain's last name           |
+| `email`               | String |      Yes | Must be a valid email address |
+| `password`            | String |      Yes | Captain's password            |
+| `vehicle.color`       | String |      Yes | Vehicle color                 |
+| `vehicle.plate`       | String |      Yes | Vehicle registration plate    |
+| `vehicle.capacity`    | Number |      Yes | Number of passengers          |
+| `vehicle.vehicleType` | String |      Yes | Type of vehicle               |
+
+### Success Response
+
+#### `201 Created`
+
+```json
+{
+  "token": "authentication-token",
+  "captain": {
+    "_id": "captain-id",
+    "fullname": {
+      "firstname": "Jatin",
+      "lastname": "Rathore"
+    },
+    "email": "jatin@example.com",
+    "vehicle": {
+      "color": "Black",
+      "plate": "RJ14AB1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+### Error Responses
+
+#### `400 Bad Request`
+
+Returned when validation fails or the email is already registered.
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid email",
+      "path": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+Or:
+
+```json
+{
+  "message": "Captain with this email already exists"
+}
+```
+
+### Example cURL Request
+
+```bash
+curl -X POST http://localhost:3000/captain/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "fullname": {
+      "firstname": "Jatin",
+      "lastname": "Rathore"
+    },
+    "email": "jatin@example.com",
+    "password": "password123",
+    "vehicle": {
+      "color": "Black",
+      "plate": "RJ14AB1234",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }'
 ```
