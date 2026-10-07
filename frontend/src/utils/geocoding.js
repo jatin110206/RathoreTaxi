@@ -16,7 +16,7 @@ export async function searchPlaces(query, countryCode = 'in') {
       )}${countryParam}&limit=6&addressdetails=1`,
       {
         headers: {
-          'Accept-Language': 'en-IN,en;q=0.9,hi;q=0.8',
+          'Accept-Language': 'en',
         },
       }
     );
@@ -44,7 +44,7 @@ export async function reverseGeocode(lat, lon) {
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&addressdetails=1`,
       {
         headers: {
-          'Accept-Language': 'en-IN,en;q=0.9,hi;q=0.8',
+          'Accept-Language': 'en',
         },
       }
     );
